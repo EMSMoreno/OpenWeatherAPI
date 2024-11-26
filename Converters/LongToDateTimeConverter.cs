@@ -2,7 +2,7 @@
 
 namespace OpenWeatherAPI.Converters
 {
-    public class LongToDateTimeConverters : IValueConverter
+    public class LongToDateTimeConverter : IValueConverter
     {
         DateTime _time = new DateTime(1970, 1, 1, 0, 0, 0, 0);
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -1,24 +1,38 @@
-﻿namespace OpenWeatherAPI
+﻿using OpenWeatherAPI.Models;
+using OpenWeatherAPI.Services;
+
+namespace OpenWeatherAPI
 {
     public partial class MainPage : ContentPage
     {
-        int count = 0;
+        private readonly IRestService _restService;
 
-        public MainPage()
+        public MainPage(IRestService restService)
         {
             InitializeComponent();
+            _restService = restService;
+        }  
+
+        private async void Button_Clicked(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(_cidade.Text))
+            {
+                WeatherData weatherData = await
+                    _restService.
+                    GetWeatherData(GenerateRequestURL(Constants.OpenWeatherMapEndpoint));
+
+                BindingContext = weatherData;
+            }
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        private string GenerateRequestURL(string endPoint)
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            string requestUri = endPoint;
+            requestUri += $"?q={_cidade.Text}";
+            requestUri += "&units=metric";
+            requestUri += $"&APPID={Constants.OpenWeatherMapAPIKey}";
+            requestUri += $"&lang=en-US";
+            return requestUri;
         }
     }
 
